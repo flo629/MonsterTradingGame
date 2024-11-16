@@ -1,0 +1,15 @@
+meta {
+  name: Retrieves the user scoreboard ordered by the user-s ELO-
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/scoreboard
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

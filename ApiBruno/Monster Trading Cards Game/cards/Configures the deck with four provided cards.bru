@@ -1,0 +1,21 @@
+meta {
+  name: Configures the deck with four provided cards
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/deck
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  [
+    {}
+  ]
+}

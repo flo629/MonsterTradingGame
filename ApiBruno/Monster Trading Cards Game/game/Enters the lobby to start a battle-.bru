@@ -1,0 +1,15 @@
+meta {
+  name: Enters the lobby to start a battle-
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/battles
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

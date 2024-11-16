@@ -1,0 +1,15 @@
+meta {
+  name: Retrieves the currently available trading deals-
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/tradings
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

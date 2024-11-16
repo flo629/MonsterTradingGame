@@ -1,0 +1,19 @@
+meta {
+  name: Carry out a trade for the deal with the provided card-
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/tradings/:tradingdealid
+  body: json
+  auth: bearer
+}
+
+params:path {
+  tradingdealid: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Deletes an existing trading deal-
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/tradings/:tradingdealid
+  body: none
+  auth: bearer
+}
+
+params:path {
+  tradingdealid: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

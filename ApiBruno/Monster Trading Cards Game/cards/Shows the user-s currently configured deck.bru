@@ -1,0 +1,19 @@
+meta {
+  name: Shows the user-s currently configured deck
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/deck
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~format: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

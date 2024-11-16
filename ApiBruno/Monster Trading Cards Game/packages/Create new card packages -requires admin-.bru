@@ -1,0 +1,25 @@
+meta {
+  name: Create new card packages -requires admin-
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/packages
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  [
+    {
+      "Id": "",
+      "Name": "",
+      "Damage": ""
+    }
+  ]
+}

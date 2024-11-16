@@ -1,0 +1,15 @@
+meta {
+  name: Retrieves the stats for an individual user
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/stats
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

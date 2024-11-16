@@ -1,0 +1,19 @@
+meta {
+  name: Updates the user data for the given username-
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/users/:username
+  body: json
+  auth: bearer
+}
+
+params:path {
+  username: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

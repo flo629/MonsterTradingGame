@@ -1,0 +1,11 @@
+meta {
+  name: Login with existing user
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/sessions
+  body: json
+  auth: none
+}
