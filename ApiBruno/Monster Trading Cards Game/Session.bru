@@ -1,0 +1,19 @@
+meta {
+  name: Session
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:10001/sessions
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Username": "John",
+    "Password": "Doe"
+    
+  }
+}
