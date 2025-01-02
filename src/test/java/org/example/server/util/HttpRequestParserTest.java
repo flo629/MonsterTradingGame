@@ -37,7 +37,7 @@ class HttpRequestParserTest {
     public void given_httpGetRequest_when_useParser_then_parsePath() {
         Request request = requestParser.parse(HTTP_GET);
 
-        assertEquals("/home", request.getPath());
+        assertEquals("/Test", request.getPath());
     }
 
     @Test
