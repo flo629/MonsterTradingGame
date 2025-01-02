@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
 
-    private int id;
+    private String id;
 
     @JsonProperty("Username")
     private String username;
@@ -18,6 +18,8 @@ public class User {
 
     private String name;
 
+    private int coin;
+
     public User(){
 
     }
@@ -27,7 +29,7 @@ public class User {
         this.password = password;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -47,7 +49,7 @@ public class User {
         return image;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

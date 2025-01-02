@@ -3,15 +3,17 @@ package org.example.application.monsterGame;
 import org.example.application.monsterGame.controller.Controller;
 import org.example.application.monsterGame.controller.UserController;
 import org.example.application.monsterGame.exception.ControllerNotFound;
+import org.example.application.monsterGame.repository.UserRepository;
 import org.example.application.monsterGame.routing.Router;
 import org.example.server.Application;
 import org.example.server.http.Request;
 import org.example.server.http.Response;
 import org.example.server.http.Status;
+import org.postgresql.jdbc2.optional.ConnectionPool;
 
 public class MonsterGame implements Application {
 
-    private final UserController userController = new UserController();
+
 
     private final Router router;
 
@@ -45,6 +47,11 @@ public class MonsterGame implements Application {
 
     private void initializeRoutes() {
         this.router.addRoute("/users", new UserController());
-        this.router.addRoute("/sessions", new UserController());
+
+        ConnectionPool connectionPool = new ConnectionPool();
+
+
+
+        //this.router.addRoute("/sessions", new UserController());
     }
 }

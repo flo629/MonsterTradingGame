@@ -3,6 +3,9 @@ package org.example.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
 
@@ -16,6 +19,8 @@ public class Server {
         this.application = application;
     }
 
+
+
     public void start() {
         try {
             this.serverSocket = new ServerSocket(10001);
@@ -24,6 +29,8 @@ public class Server {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        ExecutorService threadPool = Executors.newFixedThreadPool(5);
 
         while (true) {
             try {
@@ -34,7 +41,7 @@ public class Server {
                         this.application
                 );
 
-                requestHandler.handle();
+                threadPool.execute(requestHandler);
 
             } catch (IOException e) {
                 throw new RuntimeException(e);

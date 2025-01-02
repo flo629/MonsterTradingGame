@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalDateTime;
 
-public class RequestHandler {
+public class RequestHandler implements Runnable {
 
     // [x] receive socket
     // [x] wrap socket in HttpSocket
@@ -30,6 +30,11 @@ public class RequestHandler {
     ) {
         this.socket = socket;
         this.application = application;
+    }
+
+    @Override
+    public void run() {
+        this.handle();
     }
 
     public void handle() {
