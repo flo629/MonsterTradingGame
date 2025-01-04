@@ -8,21 +8,28 @@ import org.example.application.monsterGame.repository.UserRepository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final Map<String, String> tokens = new HashMap<>();
 
-    public UserService() {
-        this.userRepository = new UserMemoryRepository();
+    private final Map<String, String> tokens = new HashMap<>();
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
+
     public User create(User user) {
+
         userRepository.findByUsername(user.getUsername())
-                .ifPresent(existingUser -> {
-                    throw new IllegalArgumentException("User already exists");
-                });
+                        .ifPresent(existingUser -> {
+                            throw new IllegalArgumentException("username already exists");
+                        });
+
+        user.setId(UUID.randomUUID().toString());
+        user.setCoin(20);
 
         return userRepository.save(user);
     }
@@ -36,14 +43,11 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         if (!user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Invalid password");
+            throw new IllegalArgumentException("Login failed");
         }
 
 
-        String token = username + "-mtcgToken";
-        tokens.put(username, token);
-
-        return token;
+        return username + "-mtcgToken";
     }
 
     /*

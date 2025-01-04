@@ -27,6 +27,7 @@ public class User {
     public User(String username, String password){
         this.username = username;
         this.password = password;
+
     }
 
     public String getId() {
@@ -75,5 +76,13 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public int getCoin() {
+        return coin;
+    }
+
+    public void setCoin(int coin) {
+        this.coin = coin;
     }
 }

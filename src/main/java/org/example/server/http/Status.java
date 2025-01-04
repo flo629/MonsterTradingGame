@@ -6,7 +6,8 @@ public enum Status {
     CREATED(201, "Created"),
     NO_CONTENT(204, "No Content"),
     NOT_FOUND(404, "Not Found"),
-    INTERNAL_SERVER_ERROR(500, "Internal Server Error");
+    INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
+    CONFLICT(409, "Conflict");
 
     private final int code;
     private final String message;

@@ -2,14 +2,19 @@ package org.example.application.monsterGame;
 
 import org.example.application.monsterGame.controller.Controller;
 import org.example.application.monsterGame.controller.UserController;
+import org.example.application.monsterGame.entity.User;
 import org.example.application.monsterGame.exception.ControllerNotFound;
+import org.example.application.Data.ConnectionPool;
+import org.example.application.monsterGame.repository.UserDbRepository;
+import org.example.application.monsterGame.repository.UserMemoryRepository;
 import org.example.application.monsterGame.repository.UserRepository;
 import org.example.application.monsterGame.routing.Router;
+import org.example.application.monsterGame.service.UserService;
 import org.example.server.Application;
 import org.example.server.http.Request;
 import org.example.server.http.Response;
 import org.example.server.http.Status;
-import org.postgresql.jdbc2.optional.ConnectionPool;
+
 
 public class MonsterGame implements Application {
 
@@ -46,9 +51,18 @@ public class MonsterGame implements Application {
     }
 
     private void initializeRoutes() {
-        this.router.addRoute("/users", new UserController());
-
         ConnectionPool connectionPool = new ConnectionPool();
+
+        UserRepository userRepository = new UserDbRepository(connectionPool);
+        UserService userService =  new UserService(userRepository);
+
+        this.router.addRoute("/users", new UserController(userService));
+        this.router.addRoute("/sessions", new UserController(userService));
+        System.out.println("Route /users registered");
+        System.out.println("Route /sessions registered");
+
+
+
 
 
 
