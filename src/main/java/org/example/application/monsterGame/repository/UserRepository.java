@@ -15,6 +15,8 @@ public interface UserRepository {
 
     User delete(User user);
 
+    void generateToken(String username);
+
 
 
 }

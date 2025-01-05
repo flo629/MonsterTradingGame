@@ -3,6 +3,7 @@ package org.example.application.monsterGame.repository;
 import org.example.application.Data.ConnectionPool;
 import org.example.application.monsterGame.entity.User;
 
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -41,6 +42,24 @@ public class UserDbRepository implements UserRepository {
     }
 
     @Override
+    public void generateToken(String username){
+        String sql = "INSERT INTO Session VALUES(?,?)";
+
+        try(
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                ){
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, "mtcg-token");
+            preparedStatement.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public List<User> findAll() {
         return List.of();
     }
@@ -48,7 +67,7 @@ public class UserDbRepository implements UserRepository {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        String query = "SELECT id, name, password FROM users WHERE name = ?";
+        String query = "SELECT id, username, password FROM users WHERE username = ?";
         try (
                 Connection connection = connectionPool.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)
@@ -59,7 +78,7 @@ public class UserDbRepository implements UserRepository {
             if (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getString("id"));
-                user.setUsername(resultSet.getString("name"));
+                user.setUsername(resultSet.getString("username"));
                 user.setPassword(resultSet.getString("password"));
                 return Optional.of(user);
             }

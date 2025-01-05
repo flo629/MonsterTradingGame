@@ -42,6 +42,11 @@ public class UserMemoryRepository implements UserRepository {
         return null;
     }
 
+    @Override
+    public void generateToken(String username){
+
+    }
+
 
 
 }

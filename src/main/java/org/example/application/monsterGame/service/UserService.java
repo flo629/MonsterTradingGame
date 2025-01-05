@@ -46,8 +46,9 @@ public class UserService {
             throw new IllegalArgumentException("Login failed");
         }
 
+        userRepository.generateToken(username);
 
-        return username + "-mtcgToken";
+        return user.getUsername() + "-mtcgToken";
     }
 
     /*
