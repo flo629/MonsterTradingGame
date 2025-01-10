@@ -6,14 +6,12 @@ import java.util.Map;
 public class Response {
 
     private Status status;
+    private final Map<String, String> headers = new HashMap<>();
 
-    private final Map<String, String> headers;
 
     private String body;
 
-    public Response() {
-        this.headers = new HashMap<>();
-    }
+    public Response() {}
 
     public String getHeader(String name) {
         return this.headers.get(name);
@@ -40,6 +38,11 @@ public class Response {
     }
 
     public void setBody(String body) {
+        this.body = body;
+    }
+
+    public Response(Status status, String body) {
+        this.status = status;
         this.body = body;
     }
 }

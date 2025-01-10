@@ -1,14 +1,12 @@
 package org.example.application.monsterGame.service;
 
+import org.example.application.monsterGame.dto.UpdateUserDto;
 import org.example.application.monsterGame.entity.User;
 import org.example.application.monsterGame.exception.EntityNotFoundException;
 import org.example.application.monsterGame.repository.UserMemoryRepository;
 import org.example.application.monsterGame.repository.UserRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class UserService {
 
@@ -56,4 +54,34 @@ public class UserService {
         return userRepository.find(id)
                 .orElseThrow(() -> new EntityNotFoundException(User.class.getName(), id));
     }*/
+
+    public  boolean checkAuth(String username, String token){
+        if(token == null || !token.startsWith("Bearer ")){
+            return false;
+        }
+
+        return token.equals("Bearer %s-mtcgToken".formatted(username));
+    }
+
+    public boolean isAdmin(String token){
+        if(token == null || !token.startsWith("Bearer ")){
+            return false;
+        }
+
+        return token.equals("Bearer %s-mtcgToken".formatted("admin"));
+    }
+
+    public boolean updateUser(UpdateUserDto newUserDetails) {
+
+        Optional<User> userOpt = userRepository.findByUsername(newUserDetails.getUserName());
+        if(userOpt.isPresent()){
+            User user = userOpt.get();
+            user.setName(newUserDetails.getName());
+            user.setBio(newUserDetails.getBio());
+            user.setImage(newUserDetails.getImage());
+            userRepository.update(user);
+            return true;
+        }
+        return false;
+    }
 }

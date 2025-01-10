@@ -22,6 +22,9 @@ create table Session (
 DROP TABLE users;
 DROP TABLE Session;
 ALTER TABLE users ADD coin INT;
+ALTER TABLE users ADD bio VARCHAR(255);
+ALTER TABLE users ADD image VARCHAR(255);
+ALTER TABLE users ADD name VARCHAR(255);
 
 INSERT INTO users (id, username, password)
 VALUES ('550e8400-e29b-41d4-a716-446655440000', 'affe', 'okecool');

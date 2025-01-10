@@ -58,4 +58,6 @@ public class Request {
     public void setHttp(String http) {
         this.http = http;
     }
+
+
 }

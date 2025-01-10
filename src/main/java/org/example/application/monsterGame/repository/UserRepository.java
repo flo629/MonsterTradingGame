@@ -17,6 +17,6 @@ public interface UserRepository {
 
     void generateToken(String username);
 
-
+    public void update(User user);
 
 }

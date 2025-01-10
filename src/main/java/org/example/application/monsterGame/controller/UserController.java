@@ -1,5 +1,6 @@
 package org.example.application.monsterGame.controller;
 
+import org.example.application.monsterGame.dto.UpdateUserDto;
 import org.example.application.monsterGame.dto.UserDto;
 import org.example.application.monsterGame.entity.User;
 import org.example.application.monsterGame.error.ErrorResponse;
@@ -31,11 +32,14 @@ public class UserController extends Controller {
       }
       if(request.getMethod().equals(Method.POST) && request.getPath().equals("/sessions")) {
           return login(request);
+      }
+      if (request.getMethod().equals(Method.PUT) && request.getPath().startsWith("/users/")) {
+          return UpdateUser(request);
       }/*
-        if (request.getMethod().equals(Method.POST) && request.getPath().equals("/sessions")) {
-            return login(request);
-        }*/
-      return null;
+      if(request.getMethod().equals(Method.GET) && request.getPath().equals("/users")) {
+          return retrieveUser(request);
+      }*/
+      return json(Status.NOT_FOUND, new ErrorResponse("Not Found"));
   }
 
 
@@ -71,5 +75,33 @@ public class UserController extends Controller {
 
       return json(Status.OK, users);
   }
+
+    private Response UpdateUser(Request request) {
+        try {
+            String[] pathSegments = request.getPath().split("/");
+            if (pathSegments.length != 3) {
+                return new Response(Status.NOT_FOUND, "Invalid path");
+            }
+
+            String username = pathSegments[2];
+
+            String token = request.getHeader("Authorization");
+            if (!userService.checkAuth(username, token)) {
+                return new Response(Status.NOT_FOUND, "Invalid token");
+            }
+
+            UpdateUserDto userDetails = fromBody(request.getBody(), UpdateUserDto.class);
+            userDetails.setUserName(username);
+
+            boolean success = userService.updateUser(userDetails);
+            if (success) {
+                return new Response(Status.OK, "User updated successfully");
+            } else {
+                return new Response(Status.NOT_FOUND, "User not found");
+            }
+        } catch (IllegalArgumentException e) {
+            return new Response(Status.NOT_FOUND, e.getMessage());
+        }
+    }
 
 }

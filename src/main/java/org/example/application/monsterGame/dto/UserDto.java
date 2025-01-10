@@ -9,16 +9,23 @@ public class UserDto {
     @JsonProperty("Password")
     private String password;
 
+    @JsonProperty("Name")
     private String name;
 
+    @JsonProperty("Bio")
     private String bio;
 
+    @JsonProperty("Image")
     private String image;
 
     private int coin;
 
 
     public UserDto() {}
+
+    public UserDto(String username) {
+        this.username = username;
+    }
 
     public String getUsername() {
         return username;

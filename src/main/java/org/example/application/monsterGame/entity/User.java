@@ -7,7 +7,7 @@ public class User {
     private String id;
 
     @JsonProperty("Username")
-    private String username;
+    private String userName;
 
     @JsonProperty("Password")
     private String password;
@@ -25,7 +25,7 @@ public class User {
     }
 
     public User(String username, String password){
-        this.username = username;
+        this.userName = username;
         this.password = password;
 
     }
@@ -35,7 +35,7 @@ public class User {
     }
 
     public String getUsername() {
-        return username;
+        return userName;
     }
 
     public String getPassword() {
@@ -55,7 +55,7 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public void setPassword(String password) {

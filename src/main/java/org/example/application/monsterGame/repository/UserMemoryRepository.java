@@ -47,6 +47,9 @@ public class UserMemoryRepository implements UserRepository {
 
     }
 
+    @Override
+    public void update(User user){}
+
 
 
 }

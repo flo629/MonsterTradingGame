@@ -2,31 +2,43 @@ package org.example.application.monsterGame.entity;
 
 public class Card {
 
-    private String name;
-    private int damage;
-    private String type;
+    private String cardName;
 
-    public String getName() {
-        return name;
+    private float cardDamage;
+
+    private boolean monsterType;
+
+    private String elementType;
+
+    public String getCardName() {
+        return cardName;
     }
 
-    public int getDamage() {
-        return damage;
+    public void setCardName(String cardName) {
+        this.cardName = cardName;
     }
 
-    public String getType() {
-        return type;
+    public float getCardDamage() {
+        return cardDamage;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCardDamage(float cardDamage) {
+        this.cardDamage = cardDamage;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
+    public boolean isMonsterType() {
+        return monsterType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setMonsterType(boolean monsterType) {
+        this.monsterType = monsterType;
+    }
+
+    public String getElementType() {
+        return elementType;
+    }
+
+    public void setElementType(String elementType) {
+        this.elementType = elementType;
     }
 }

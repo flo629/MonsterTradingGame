@@ -94,4 +94,22 @@ public class UserDbRepository implements UserRepository {
     public User delete(User user) {
         return null;
     }
+
+    @Override
+    public void update(User user){
+        String sql = "UPDATE users SET name = ?, bio = ?, image = ? WHERE username = ?";
+        try(
+            Connection connection = connectionPool.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ){
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getBio());
+            preparedStatement.setString(3,user.getImage());
+            preparedStatement.setString(4,user.getUsername());
+            preparedStatement.execute();
+        }catch(SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("Error updating database", e);
+        }
+    }
 }
