@@ -13,7 +13,7 @@ import java.util.Optional;
 public class UserDbRepository implements UserRepository {
 
     private final static String NEW_STUDENT
-            ="INSERT INTO users VALUES(?,?,?,?)";
+            ="INSERT INTO users VALUES(?,?,?,?,?)";
 
     private final ConnectionPool connectionPool;
 
@@ -32,6 +32,7 @@ public class UserDbRepository implements UserRepository {
             preparedStatement.setString(2,user.getUsername());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setInt(4,user.getCoin());
+            preparedStatement.setInt(5, 100);
             preparedStatement.execute();
 
             return user;

@@ -1,14 +1,17 @@
 package org.example.application.monsterGame;
 
 import org.example.application.monsterGame.controller.Controller;
+import org.example.application.monsterGame.controller.PackageController;
+import org.example.application.monsterGame.controller.StatsController;
 import org.example.application.monsterGame.controller.UserController;
 import org.example.application.monsterGame.entity.User;
 import org.example.application.monsterGame.exception.ControllerNotFound;
 import org.example.application.Data.ConnectionPool;
-import org.example.application.monsterGame.repository.UserDbRepository;
-import org.example.application.monsterGame.repository.UserMemoryRepository;
-import org.example.application.monsterGame.repository.UserRepository;
+import org.example.application.monsterGame.repository.*;
 import org.example.application.monsterGame.routing.Router;
+import org.example.application.monsterGame.service.CardService;
+import org.example.application.monsterGame.service.Packageservice;
+import org.example.application.monsterGame.service.StatsService;
 import org.example.application.monsterGame.service.UserService;
 import org.example.server.Application;
 import org.example.server.http.Request;
@@ -56,8 +59,21 @@ public class MonsterGame implements Application {
         UserRepository userRepository = new UserDbRepository(connectionPool);
         UserService userService =  new UserService(userRepository);
 
+        StatsDbRepository statsDbRepository = new StatsDbRepository(connectionPool);
+        StatsService statsService = new StatsService(statsDbRepository);
+
+        PackageRepository packageRepository = new PackageRepository(connectionPool);
+        Packageservice packageservice = new Packageservice(packageRepository);
+
+        CardRespository cardRepository = new CardRespository(connectionPool);
+        CardService cardService = new CardService(cardRepository);
+
+
         this.router.addRoute("/users", new UserController(userService));
         this.router.addRoute("/sessions", new UserController(userService));
+        this.router.addRoute("/stats", new StatsController(statsService));
+        this.router.addRoute("/packages", new PackageController(packageservice, cardService));
+
         System.out.println("Route /users registered");
         System.out.println("Route /sessions registered");
 

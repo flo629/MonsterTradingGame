@@ -12,6 +12,7 @@ import org.example.server.http.Status;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class UserController extends Controller {
 
@@ -36,7 +37,7 @@ public class UserController extends Controller {
       if (request.getMethod().equals(Method.PUT) && request.getPath().startsWith("/users/")) {
           return UpdateUser(request);
       }/*
-      if(request.getMethod().equals(Method.GET) && request.getPath().equals("/users")) {
+      if(request.getMethod().equals(Method.GET) && request.getPath().startsWith("/users/")) {
           return retrieveUser(request);
       }*/
       return json(Status.NOT_FOUND, new ErrorResponse("Not Found"));
@@ -76,32 +77,44 @@ public class UserController extends Controller {
       return json(Status.OK, users);
   }
 
-    private Response UpdateUser(Request request) {
-        try {
-            String[] pathSegments = request.getPath().split("/");
-            if (pathSegments.length != 3) {
-                return new Response(Status.NOT_FOUND, "Invalid path");
+  private Response UpdateUser(Request request) {
+        try{
+
+            String[] pathsegments= request.getPath().split("/");
+
+            if(pathsegments.length != 3) {
+                throw new IllegalArgumentException("Invalid path");
             }
 
-            String username = pathSegments[2];
+            String userName =pathsegments[2];
+
+            if(userName.isEmpty()){
+                throw new IllegalArgumentException("No username provided");
+            }
 
             String token = request.getHeader("Authorization");
-            if (!userService.checkAuth(username, token)) {
-                return new Response(Status.NOT_FOUND, "Invalid token");
+
+            if(!userService.checkAuth(userName,token)){
+                throw new IllegalArgumentException("Invalid token");
             }
 
-            UpdateUserDto userDetails = fromBody(request.getBody(), UpdateUserDto.class);
-            userDetails.setUserName(username);
+            UpdateUserDto credentials =  fromBody(request.getBody(), UpdateUserDto.class);
+            credentials.setUserName(userName);
 
-            boolean success = userService.updateUser(userDetails);
-            if (success) {
-                return new Response(Status.OK, "User updated successfully");
-            } else {
-                return new Response(Status.NOT_FOUND, "User not found");
+            boolean success = userService.updateUser(credentials);
+
+            if(success){
+                return json(Status.OK, credentials);
             }
-        } catch (IllegalArgumentException e) {
-            return new Response(Status.NOT_FOUND, e.getMessage());
+
+            return json(Status.CONFLICT, new ErrorResponse("User Not found"));
+
+
+        }catch(IllegalArgumentException e){
+            return json(Status.CONFLICT,new ErrorResponse(e.getMessage()));
         }
-    }
+  }
+
+
 
 }

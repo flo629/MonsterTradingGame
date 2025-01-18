@@ -1,15 +1,19 @@
 package org.example.application.monsterGame.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Stats {
 
+    @JsonProperty("Username")
     private String userName;
 
-    private int totalGames;
-
+    @JsonProperty("wins")
     private int totalWins;
 
+    @JsonProperty("loses")
     private int totalLosses;
 
+    @JsonProperty("elo")
     private int elo;
 
     public String getUserName() {
@@ -20,16 +24,17 @@ public class Stats {
         this.userName = userName;
     }
 
-    public int getTotalGames() {
-        return totalGames;
-    }
-
-    public void setTotalGames(int totalGames) {
-        this.totalGames = totalGames;
-    }
 
     public int getTotalWins() {
         return totalWins;
+    }
+
+    public void addWins(){
+        totalWins += 1;
+    }
+
+    public void addLosses(){
+        totalLosses += 1;
     }
 
     public void setTotalWins(int totalWins) {

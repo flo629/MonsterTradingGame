@@ -44,7 +44,7 @@ public class UserService {
             throw new IllegalArgumentException("Login failed");
         }
 
-        userRepository.generateToken(username);
+        //userRepository.generateToken(username);
 
         return user.getUsername() + "-mtcgToken";
     }
@@ -63,19 +63,26 @@ public class UserService {
         return token.equals("Bearer %s-mtcgToken".formatted(username));
     }
 
-    public boolean isAdmin(String token){
+    public boolean isAdmin(String username, String token){
+
+        if(!username.equals("admin")){
+            return false;
+        }
+
         if(token == null || !token.startsWith("Bearer ")){
             return false;
         }
 
-        return token.equals("Bearer %s-mtcgToken".formatted("admin"));
+        return token.equals("Bearer %s-mtcgToken".formatted(username));
     }
+
 
     public boolean updateUser(UpdateUserDto newUserDetails) {
 
         Optional<User> userOpt = userRepository.findByUsername(newUserDetails.getUserName());
         if(userOpt.isPresent()){
             User user = userOpt.get();
+            System.out.println(user.getPassword());
             user.setName(newUserDetails.getName());
             user.setBio(newUserDetails.getBio());
             user.setImage(newUserDetails.getImage());
@@ -84,4 +91,6 @@ public class UserService {
         }
         return false;
     }
+
+
 }
