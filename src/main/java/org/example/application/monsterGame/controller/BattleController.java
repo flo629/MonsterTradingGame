@@ -7,9 +7,14 @@ import org.example.server.http.Request;
 import org.example.server.http.Response;
 import org.example.server.http.Status;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 public class BattleController extends Controller {
 
     private final BattleService battleService;
+
+    // Locking-Mechanismus
+    private static final ConcurrentHashMap<String, Object> battleLocks = new ConcurrentHashMap<>();
 
     public BattleController(BattleService battleService) {
         this.battleService = battleService;
@@ -32,11 +37,18 @@ public class BattleController extends Controller {
         String token = header.substring("Bearer ".length());
         String username = token.split("-")[0];
 
-        try {
-            String result = battleService.enqueueForBattle(username);
-            return json(Status.OK, result);
-        } catch (IllegalArgumentException e) {
-            return json(Status.CONFLICT, new ErrorResponse(e.getMessage()));
+        // Lock basierend auf Benutzernamen erstellen
+        battleLocks.putIfAbsent(username, new Object());
+        synchronized (battleLocks.get(username)) {
+            try {
+                String result = battleService.enqueueForBattle(username);
+                return json(Status.OK, result);
+            } catch (IllegalArgumentException e) {
+                return json(Status.CONFLICT, new ErrorResponse(e.getMessage()));
+            } finally {
+                // Lock entfernen, wenn die Battle abgeschlossen ist
+                battleLocks.remove(username);
+            }
         }
     }
 }

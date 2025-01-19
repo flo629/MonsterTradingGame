@@ -30,9 +30,9 @@ public class ScoreBoardRepository {
             while (rs.next()) {
                 scoreboard.add(new Stats(
                         rs.getString("username"),
-                        rs.getInt("elo"),
                         rs.getInt("wins"),
-                        rs.getInt("loses")
+                        rs.getInt("loses"),
+                        rs.getInt("elo")
                 ));
             }
         } catch (SQLException e) {

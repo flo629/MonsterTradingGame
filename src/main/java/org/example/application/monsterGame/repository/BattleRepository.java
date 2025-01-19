@@ -132,6 +132,7 @@ public class BattleRepository {
     }
 
     public void updateStats(String userId, boolean isWinner) {
+        System.out.println("Updating stats for user: " + userId + " | Winner: " + isWinner);
         String sql = isWinner
                 ? "UPDATE users SET wins = wins + 1 WHERE id = ?"
                 : "UPDATE users SET loses = loses + 1 WHERE id = ?";
@@ -144,6 +145,7 @@ public class BattleRepository {
             throw new RuntimeException("Error updating stats for user: " + userId, e);
         }
     }
+
 
     public void updateElo(User winner, User loser) {
         String winnerSql = "UPDATE users SET elo = elo + 3 WHERE id = ?";

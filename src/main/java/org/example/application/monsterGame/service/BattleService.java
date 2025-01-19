@@ -5,13 +5,14 @@ import org.example.application.monsterGame.entity.Deck;
 import org.example.application.monsterGame.entity.User;
 import org.example.application.monsterGame.repository.BattleRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BattleService {
-
     private final BattleRepository battleRepository;
+
+    // Aktive Battles (Key: Spieler 1, Value: Spieler 2)
+    private static final Set<String> activeBattles = ConcurrentHashMap.newKeySet();
 
     public BattleService(BattleRepository battleRepository) {
         this.battleRepository = battleRepository;
@@ -21,11 +22,33 @@ public class BattleService {
         User user = battleRepository.getUserByName(username);
         if (user == null) throw new IllegalArgumentException("User not found");
 
+        synchronized (activeBattles) {
+            if (activeBattles.contains(user.getId())) {
+                return "User is already in a battle.";
+            }
+        }
+
         boolean matched = battleRepository.enqueueUser(user);
         if (matched) {
             User opponent = battleRepository.getOpponent(user);
             if (opponent != null) {
-                return playBattle(user, opponent);
+                // Prüfen, ob die Battle bereits gestartet wurde
+                String battleKey = generateBattleKey(user.getId(), opponent.getId());
+                synchronized (activeBattles) {
+                    if (activeBattles.contains(battleKey)) {
+                        return "Battle is already in progress.";
+                    }
+                    activeBattles.add(battleKey);
+                }
+
+                // Battle ausführen
+                try {
+                    return playBattle(user, opponent);
+                } finally {
+                    synchronized (activeBattles) {
+                        activeBattles.remove(battleKey);
+                    }
+                }
             }
         }
 
@@ -51,6 +74,12 @@ public class BattleService {
         while (!user1Cards.isEmpty() && !user2Cards.isEmpty() && rounds < 100) {
             rounds++;
             battleLog.append(playRound(user1, user2, user1Cards, user2Cards)).append("\n");
+        }
+
+        if (rounds >= 100) {
+
+            battleLog.append("The battle ends in a draw after 100 rounds.");
+            return battleLog.toString();
         }
 
         String winner = determineWinner(user1, user2, user1Cards, user2Cards);
@@ -84,10 +113,20 @@ public class BattleService {
     }
 
     private String determineWinner(User user1, User user2, List<Card> user1Cards, List<Card> user2Cards) {
-        if (user1Cards.isEmpty() && user2Cards.isEmpty()) return "The battle ends in a draw.";
+        if (user1Cards.isEmpty() && user2Cards.isEmpty()) {
+            return "The battle ends in a draw.";
+        }
 
-        User winner = user1Cards.isEmpty() ? user2 : user1;
-        User loser = user1Cards.isEmpty() ? user1 : user2;
+        User winner;
+        User loser;
+
+        if (user1Cards.isEmpty()) {
+            winner = user2;
+            loser = user1;
+        } else {
+            winner = user1;
+            loser = user2;
+        }
 
         battleRepository.updateStats(winner.getId(), true);
         battleRepository.updateStats(loser.getId(), false);
@@ -102,7 +141,6 @@ public class BattleService {
     }
 
     private double calculateDamage(Card attacker, Card defender) {
-       // if (attacker.getName() == Card.CardName.Goblin && defender.getName() == Card.CardName.Dragon) return 0;
         if (attacker.getName() == Card.CardName.Wizzard && defender.getName() == Card.CardName.Ork) return 0;
         if (attacker.getName() == Card.CardName.WaterSpell && defender.getName() == Card.CardName.Knight) return Double.MAX_VALUE;
         if (attacker.getName() == Card.CardName.Kraken && defender.getType() == Card.CardType.spell) return 0;
@@ -115,5 +153,11 @@ public class BattleService {
         }
 
         return attacker.getDamage();
+    }
+
+    private String generateBattleKey(String user1Id, String user2Id) {
+        List<String> users = Arrays.asList(user1Id, user2Id);
+        Collections.sort(users); // Sortiere, um konsistente Schlüssel zu erstellen
+        return String.join("-", users);
     }
 }
