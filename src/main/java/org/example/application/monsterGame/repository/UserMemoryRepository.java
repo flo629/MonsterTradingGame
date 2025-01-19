@@ -36,6 +36,13 @@ public class UserMemoryRepository implements UserRepository {
                 .filter(user -> user.getUsername().equals(username))
                 .findFirst();
     }
+    @Override
+    public Optional<User> newUserInfo(String username) {
+        return users.stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
+    }
+
 
     @Override
     public User delete(User user){

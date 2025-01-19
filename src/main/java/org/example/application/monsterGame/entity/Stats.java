@@ -20,8 +20,19 @@ public class Stats {
         return userName;
     }
 
+
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Stats(String userName, int totalWins, int totalLosses, int elo) {
+        this.userName = userName;
+        this.totalWins = totalWins;
+        this.totalLosses = totalLosses;
+        this.elo = elo;
+    }
+    public Stats(){
+
     }
 
 

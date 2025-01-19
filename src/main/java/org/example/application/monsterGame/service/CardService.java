@@ -3,6 +3,8 @@ package org.example.application.monsterGame.service;
 import org.example.application.monsterGame.entity.Card;
 import org.example.application.monsterGame.repository.CardRespository;
 
+import java.util.List;
+
 public class CardService {
 
     private final CardRespository cardRespository;
@@ -13,6 +15,11 @@ public class CardService {
 
     public void addCard(Card card) {
         cardRespository.save(card);
+    }
+
+    public List<Card> getCardsForUser(String username) {
+
+        return cardRespository.findCardsByUser(username);
     }
 
 

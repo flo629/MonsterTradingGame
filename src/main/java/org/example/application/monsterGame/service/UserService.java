@@ -92,5 +92,10 @@ public class UserService {
         return false;
     }
 
+    public Optional<User> retrieveUser(String username) {
+        return userRepository.newUserInfo(username);
+    }
+
+
 
 }

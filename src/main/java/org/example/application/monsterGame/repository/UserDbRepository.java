@@ -6,6 +6,7 @@ import org.example.application.monsterGame.entity.User;
 import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -89,6 +90,34 @@ public class UserDbRepository implements UserRepository {
         }
         return Optional.empty();
     }
+
+
+    @Override
+    public Optional<User> newUserInfo(String username) {
+        String query = "SELECT name, bio, image FROM users WHERE username = ?";
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(query)
+        ) {
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                User user = new User();
+                user.setName(resultSet.getString("name"));
+                user.setBio(resultSet.getString("bio"));
+                user.setImage(resultSet.getString("image"));
+                return Optional.of(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error accessing database", e);
+        }
+        return Optional.empty();
+    }
+
+
+
 
 
     @Override

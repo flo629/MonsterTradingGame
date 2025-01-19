@@ -1,18 +1,13 @@
 package org.example.application.monsterGame;
 
-import org.example.application.monsterGame.controller.Controller;
-import org.example.application.monsterGame.controller.PackageController;
-import org.example.application.monsterGame.controller.StatsController;
-import org.example.application.monsterGame.controller.UserController;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.example.application.monsterGame.controller.*;
 import org.example.application.monsterGame.entity.User;
 import org.example.application.monsterGame.exception.ControllerNotFound;
 import org.example.application.Data.ConnectionPool;
 import org.example.application.monsterGame.repository.*;
 import org.example.application.monsterGame.routing.Router;
-import org.example.application.monsterGame.service.CardService;
-import org.example.application.monsterGame.service.Packageservice;
-import org.example.application.monsterGame.service.StatsService;
-import org.example.application.monsterGame.service.UserService;
+import org.example.application.monsterGame.service.*;
 import org.example.server.Application;
 import org.example.server.http.Request;
 import org.example.server.http.Response;
@@ -50,6 +45,8 @@ public class MonsterGame implements Application {
             );
 
             return response;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -68,11 +65,22 @@ public class MonsterGame implements Application {
         CardRespository cardRepository = new CardRespository(connectionPool);
         CardService cardService = new CardService(cardRepository);
 
+        DeckRepository deckRepository = new DeckRepository(connectionPool);
+        DeckService deckService = new DeckService(deckRepository);
+
+        ScoreBoardRepository scoreBoardRepository = new ScoreBoardRepository(connectionPool);
+        ScoreBoardService scoreBoardService = new ScoreBoardService(scoreBoardRepository);
+
 
         this.router.addRoute("/users", new UserController(userService));
         this.router.addRoute("/sessions", new UserController(userService));
         this.router.addRoute("/stats", new StatsController(statsService));
-        this.router.addRoute("/packages", new PackageController(packageservice, cardService));
+        Controller packageController = new PackageController(packageservice, cardService);
+        this.router.addRoute("/packages", packageController);
+        this.router.addRoute("/transactions", packageController);
+        this.router.addRoute("/cards", new CardController(cardService));
+        this.router.addRoute("/deck", new DeckController(deckService));
+        this.router.addRoute("/scoreboard", new ScoreBoardController(scoreBoardService));
 
         System.out.println("Route /users registered");
         System.out.println("Route /sessions registered");

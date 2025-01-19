@@ -18,7 +18,7 @@ public abstract class Controller {
     public Controller(){
         this.objectMapper = new ObjectMapper();
     }
-    public abstract Response handle(Request request);
+    public abstract Response handle(Request request) throws JsonProcessingException;
 
     protected <T> T fromBody(String body, Class<T> type) {
         try {

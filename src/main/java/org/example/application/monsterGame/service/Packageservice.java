@@ -4,6 +4,7 @@ import org.example.application.monsterGame.entity.Card;
 import org.example.application.monsterGame.repository.PackageRepository;
 import org.postgresql.util.PSQLException;
 
+import java.util.List;
 import java.util.UUID;
 
 public class Packageservice {
@@ -24,6 +25,26 @@ public class Packageservice {
         packageRepository.savePackage(packageId, cards);
 
         return packageId;
+    }
+
+    public int getUserCoins(String username){
+        return packageRepository.getUserCoins(username);
+    }
+
+    public String getAvailablePackageId(){
+        return packageRepository.findAvailablePackageId();
+    }
+
+    public void assignPackageToUser(String packageId, String username){
+        List<Card> cards = packageRepository.getCardsFromPackage(packageId);
+        packageRepository.updatePackageAvailability(packageId, false);
+
+        for(Card card : cards){
+            packageRepository.addOwnership(card.getId(), username);
+        }
+
+        packageRepository.deductCoins(username, 5);
+
     }
 
 

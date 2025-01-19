@@ -32,6 +32,9 @@ public class PackageController extends Controller{
         if(request.getMethod().equals(Method.POST) && request.getPath().equals("/packages")) {
             return createPackage(request);
         }
+        if(request.getMethod().equals(Method.POST) && request.getPath().equals("/transactions/packages")) {
+            return acquierePackage(request);
+        }
         return json(Status.NOT_FOUND, new ErrorResponse("Route does not exist"));
 
     }
@@ -76,6 +79,37 @@ public class PackageController extends Controller{
             throw new RuntimeException(e);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private Response acquierePackage(Request request) {
+        try{
+            String header = request.getHeader("Authorization");
+
+            if(!header.startsWith("Bearer ")){
+                throw new IllegalArgumentException("Wrong Authorization");
+            }
+
+            String token = header.substring("Bearer ".length());
+            String username = token.split("-")[0];
+
+            int userCoins = packageService.getUserCoins(username);
+
+            if(userCoins < 5){
+                return json(Status.CONFLICT, new ErrorResponse("Not enough coins to buy a package"));
+            }
+
+            String packageId = packageService.getAvailablePackageId();
+
+            if(packageId == null){
+                return json(Status.NOT_FOUND, new ErrorResponse("No available package"));
+            }
+
+            packageService.assignPackageToUser(packageId, username);
+
+            return json(Status.CREATED, "user bought package");
+        }catch(IllegalArgumentException e){
+            return json(Status.CONFLICT, new ErrorResponse(e.getMessage()));
         }
     }
 

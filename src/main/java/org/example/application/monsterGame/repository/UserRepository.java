@@ -19,6 +19,6 @@ public interface UserRepository {
 
     public void update(User user);
 
-
+    Optional<User> newUserInfo(String username);
 
 }
