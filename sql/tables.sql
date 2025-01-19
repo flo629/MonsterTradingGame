@@ -138,3 +138,9 @@ WHERE id IN (
              'e85e3976-7c86-4d06-9a80-641c2019a79f',
              '171f6076-4eb5-4a7d-b3f2-2d650cc3d237'
     );
+
+
+UPDATE users
+SET coin = coin + 100
+WHERE id = 'd968a8af-3e52-4092-b762-336e17d0a2e7';
+

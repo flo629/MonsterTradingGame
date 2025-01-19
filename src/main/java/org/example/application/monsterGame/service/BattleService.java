@@ -94,6 +94,17 @@ public class BattleService {
         Card card1 = getRandomCard(user1Cards);
         Card card2 = getRandomCard(user2Cards);
 
+        // Prüfe, ob ein Spieler mehr als 50 Münzen hat
+        if (battleRepository.payToWin(user1)) {
+            user2Cards.remove(card2);
+            return user1.getUsername() + " wins the round with " + card1.getName() + " using a coin booster!";
+        }
+
+        if (battleRepository.payToWin(user2)) {
+            user1Cards.remove(card1);
+            return user2.getUsername() + " wins the round with " + card2.getName() + " using a coin booster!";
+        }
+
         double damage1 = calculateDamage(card1, card2);
         double damage2 = calculateDamage(card2, card1);
 
@@ -140,7 +151,11 @@ public class BattleService {
         return deck.get(random.nextInt(deck.size()));
     }
 
+
     private double calculateDamage(Card attacker, Card defender) {
+        if (attacker.getName() == Card.CardName.WaterGoblin && defender.getName() == Card.CardName.Ork) return 0;
+        if (attacker.getName() == Card.CardName.FireGoblin && defender.getName() == Card.CardName.Ork) return 0;
+        if (attacker.getName() == Card.CardName.RegularGoblin && defender.getName() == Card.CardName.Ork) return 0;
         if (attacker.getName() == Card.CardName.Wizzard && defender.getName() == Card.CardName.Ork) return 0;
         if (attacker.getName() == Card.CardName.WaterSpell && defender.getName() == Card.CardName.Knight) return Double.MAX_VALUE;
         if (attacker.getName() == Card.CardName.Kraken && defender.getType() == Card.CardType.spell) return 0;

@@ -117,7 +117,7 @@ public class UserController extends Controller {
 
     private Response retrieveUser(Request request) {
         try {
-            // Parse the path to get the username
+
             String[] pathsegments = request.getPath().split("/");
             if (pathsegments.length != 3) {
                 throw new IllegalArgumentException("Invalid path");
@@ -128,18 +128,18 @@ public class UserController extends Controller {
                 throw new IllegalArgumentException("No username provided");
             }
 
-            // Validate the Authorization token
+
             String token = request.getHeader("Authorization");
             if (!userService.checkAuth(username, token)) {
                 return json(Status.CONFLICT, new ErrorResponse("Unauthorized"));
             }
 
-            // Retrieve the user data
+
             Optional<User> userOpt = userService.retrieveUser(username);
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
 
-                // Return only bio, name, and image
+
                 Map<String, String> response = Map.of(
                         "Name", user.getName(),
                         "Bio", user.getBio(),

@@ -31,7 +31,7 @@ public abstract class Controller {
     protected <T> List<T> fromBodyList(String body, Class<T> type) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            // Verwende TypeReference für die Liste des gewünschten Typs
+
             return objectMapper.readValue(body, new TypeReference<List<T>>() {});
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to parse JSON body to list: " + e.getMessage(), e);

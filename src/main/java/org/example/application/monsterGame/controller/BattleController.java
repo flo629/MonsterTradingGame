@@ -37,7 +37,7 @@ public class BattleController extends Controller {
         String token = header.substring("Bearer ".length());
         String username = token.split("-")[0];
 
-        // Lock basierend auf Benutzernamen erstellen
+
         battleLocks.putIfAbsent(username, new Object());
         synchronized (battleLocks.get(username)) {
             try {
@@ -46,7 +46,7 @@ public class BattleController extends Controller {
             } catch (IllegalArgumentException e) {
                 return json(Status.CONFLICT, new ErrorResponse(e.getMessage()));
             } finally {
-                // Lock entfernen, wenn die Battle abgeschlossen ist
+
                 battleLocks.remove(username);
             }
         }

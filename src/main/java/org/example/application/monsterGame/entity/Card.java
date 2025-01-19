@@ -28,14 +28,14 @@ public class Card {
     private CardType type;
     private Element element;
 
-    // Optional, falls benötigt
+
     @JsonProperty("Damage")
     private int damage;
     private String ownerId; // Nullable
     private boolean isInDeck;
     private boolean isLocked;
 
-    // Constructors
+
     public Card(String id, CardName name, CardType type, Element element, int damage) {
         this.id = id;
         this.name = name;
@@ -51,7 +51,7 @@ public class Card {
 
     };
 
-    // Getters and setters
+
     public String getId() {
         return id;
     }

@@ -199,5 +199,32 @@ public class BattleRepository {
         }
     }
 
+    public boolean payToWin(User user) {
+        String queryCheckCoins = "SELECT coin FROM users WHERE id = ?";
+        String queryResetCoins = "UPDATE users SET coin = coin - 10 WHERE id = ?";
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement checkStatement = connection.prepareStatement(queryCheckCoins)
+        ) {
+            // Prüfe die aktuellen Münzen des Benutzers
+            checkStatement.setString(1, user.getId());
+            ResultSet rs = checkStatement.executeQuery();
+
+            if (rs.next() && rs.getInt("coin") > 50) {
+                // Münzen auf 0 setzen
+                try (PreparedStatement resetStatement = connection.prepareStatement(queryResetCoins)) {
+                    resetStatement.setString(1, user.getId());
+                    resetStatement.executeUpdate();
+                }
+                return true; // Booster aktiviert
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error using coin booster for user: " + user.getId(), e);
+        }
+        return false; //
+    }
+
+
 
 }
