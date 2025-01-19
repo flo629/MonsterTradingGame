@@ -35,14 +35,14 @@ public class ScoreBoardController extends Controller {
                 return json(Status.CONFLICT, new ErrorResponse("Access token is missing or invalid"));
             }
 
-            // Token validation (simple extraction of username in this example)
-            String token = header.substring("Bearer ".length());
-            String username = token.split("-")[0]; // Extract username from token
 
-            // Fetch scoreboard
+            String token = header.substring("Bearer ".length());
+            String username = token.split("-")[0];
+
+
             List<Stats> scoreboard = scoreBoardService.getScoreboard();
 
-            // Return as JSON response
+
             return new Response(Status.OK, mapper.writeValueAsString(scoreboard));
         } catch (JsonProcessingException e) {
             return json(Status.INTERNAL_SERVER_ERROR, new ErrorResponse("Error processing response"));

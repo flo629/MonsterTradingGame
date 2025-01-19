@@ -20,6 +20,9 @@ public class User {
 
     private int coin;
 
+
+    private int elo;
+
     public User(){
 
     }
@@ -28,6 +31,14 @@ public class User {
         this.userName = username;
         this.password = password;
 
+    }
+
+    public int getElo() {
+        return elo;
+    }
+
+    public void setElo(int elo) {
+        this.elo = elo;
     }
 
     public String getId() {

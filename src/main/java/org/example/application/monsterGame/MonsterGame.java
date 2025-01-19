@@ -71,6 +71,9 @@ public class MonsterGame implements Application {
         ScoreBoardRepository scoreBoardRepository = new ScoreBoardRepository(connectionPool);
         ScoreBoardService scoreBoardService = new ScoreBoardService(scoreBoardRepository);
 
+        BattleRepository battleRepository = new BattleRepository(connectionPool);
+        BattleService battleService = new BattleService(battleRepository);
+
         this.router.addRoute("/users", new UserController(userService));
         this.router.addRoute("/sessions", new UserController(userService));
         this.router.addRoute("/stats", new StatsController(statsService));
@@ -80,6 +83,7 @@ public class MonsterGame implements Application {
         this.router.addRoute("/cards", new CardController(cardService));
         this.router.addRoute("/deck", new DeckController(deckService));
         this.router.addRoute("/scoreboard", new ScoreBoardController(scoreBoardService));
+        this.router.addRoute("/battles", new BattleController(battleService));
 
         System.out.println("Route /users registered");
         System.out.println("Route /sessions registered");
