@@ -71,7 +71,6 @@ public class MonsterGame implements Application {
         ScoreBoardRepository scoreBoardRepository = new ScoreBoardRepository(connectionPool);
         ScoreBoardService scoreBoardService = new ScoreBoardService(scoreBoardRepository);
 
-
         this.router.addRoute("/users", new UserController(userService));
         this.router.addRoute("/sessions", new UserController(userService));
         this.router.addRoute("/stats", new StatsController(statsService));
